@@ -39,8 +39,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 359db8d677d5f0343893ab19d5709957, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  SpringConstant: 10
-  DampingFactor: 10
+  SpringConstant: 2
+  DampingFactor: -5
   RestLength: 0
   _goA: {fileID: 0}
   _goB: {fileID: 0}
@@ -50,7 +50,15 @@ Prefab:
   serializedVersion: 2
   m_Modification:
     m_TransformParent: {fileID: 0}
-    m_Modifications: []
+    m_Modifications:
+    - target: {fileID: 0}
+      propertyPath: SpringConstant
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 0}
+      propertyPath: DampingFactor
+      value: -5
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 0}
   m_RootGameObject: {fileID: 165506}

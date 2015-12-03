@@ -89,8 +89,8 @@ MonoBehaviour:
   acl: {x: 0, y: 0, z: 0}
   mom: {x: 0, y: 0, z: 0}
   frc: {x: 0, y: 0, z: 0}
-  isStatic: 0
   mass: 10
+  isAnchor: 0
 --- !u!1001 &100100000
 Prefab:
   m_ObjectHideFlags: 1

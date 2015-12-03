@@ -11,9 +11,11 @@ public class Node : MonoBehaviour
    public Vector3 mom; //Momentum
    public Vector3 frc; // Force
 
-   public bool isStatic = false;
+   public  float mass =1;
 
-  public  float mass =1;
+   public bool isAnchor = false;
+
+  
 
     void Awake()
     {
@@ -22,39 +24,16 @@ public class Node : MonoBehaviour
         mass += .00001f;
     }
 
-    void Update()
-    {
-        if (!isStatic)
-        {
-           // frc += CalUniformGravity(GetComponent<Node>());
 
-           CalNewAcceleration(gameObject.GetComponent<Node>());
-           //frc = Vector3.zero;
-            //frc += CalUniformGravity(this.GetComponent<Node>());
-           // print(this + "/\t" + vel + "/\t" + acl + "/\t" + frc);
-            gameObject.transform.position = CalNewPosition(gameObject.GetComponent<Node>());
-            
-        }
-        //frc = Vector3.zero;
-    }
 
-    static public Vector3 CalNewAcceleration(Node a)
-    {
-        return a.acl = (1f / a.mass) * a.frc;
-    }
+   
+    //static public GameObject MakeNode(bool anchor, PrimitiveType type)
+    //{
+    //    GameObject newNode = GameObject.CreatePrimitive(type);
+    //    new 
+    //    return 
+    //}
 
-    static public Vector3 CalNewVelocity(Node a)
-    {
-        return a.vel += (CalNewAcceleration(a) * Time.deltaTime);
-    }
 
-    static public Vector3 CalNewPosition(Node a)
-    {
-        return a.transform.position + CalNewVelocity(a) * Time.deltaTime;
-    }
 
-    static public Vector3 CalUniformGravity(Node a)
-    {
-        return Mathf.Abs(a.mass) * new Vector3(0f, -9.8f, 0f) * (Time.deltaTime * Time.deltaTime);
-    }
 }

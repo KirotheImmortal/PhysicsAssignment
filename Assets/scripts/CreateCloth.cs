@@ -28,7 +28,7 @@ public class CreateCloth : MonoBehaviour
            for(int colom = 0; colom <amount; colom++)
            {
                GameObject node = (GameObject)GameObject.Instantiate(nodePref, new Vector3(colom * distanceAppart, row * distanceAppart), gameObject.transform.rotation);
-               node.GetComponent<Node>().isStatic = false;
+               node.GetComponent<Node>().isAnchor = false;
 
                objectNodes.Add(new Vector2(row,colom), node);
            }
@@ -46,7 +46,7 @@ public class CreateCloth : MonoBehaviour
             if (objectNodes.ContainsKey(node))
             {
                 print(node);
-                objectNodes[node].GetComponent<Node>().isStatic = true;
+                objectNodes[node].GetComponent<Node>().isAnchor = true;
             }
         }
 

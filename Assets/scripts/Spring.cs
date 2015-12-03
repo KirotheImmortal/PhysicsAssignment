@@ -37,7 +37,7 @@ public class Spring : MonoBehaviour
         {
             A = goA.GetComponent<Node>();
             B = goB.GetComponent<Node>();
-            RestLength = Vector3.Distance(goA.transform.position, goB.transform.position);
+            RestLength = Vector3.Magnitude(goA.transform.position - goB.transform.position);
         }
        
 
@@ -52,7 +52,7 @@ public class Spring : MonoBehaviour
         }
 
         if( RestLength== 0)
-            RestLength = Vector3.Distance(goA.transform.position, goB.transform.position);
+            RestLength = Vector3.Magnitude(goA.transform.position - goB.transform.position);
 
         Debug.DrawLine(goA.transform.position, goB.transform.position);
 
@@ -65,6 +65,14 @@ public class Spring : MonoBehaviour
         gameObject.transform.position = middle;
 
         CalForce();
+
+
+
+        CalNewAcceleration(A);
+        CalNewAcceleration(B);
+
+        CalNewPosition(A);
+        CalNewPosition(B);
     }
     
     public void CalForce()
@@ -73,22 +81,35 @@ public class Spring : MonoBehaviour
         Vector3 vectorDistance = goB.transform.position - goA.transform.position;
         //gets a 1D Distance of the two nodes
         float floatDistance = Vector3.Magnitude(vectorDistance);
-        Vector3 e = Vector3.Normalize(vectorDistance);
-        float sForce;
+        Vector3 e = vectorDistance / floatDistance;
+        float Fs = 0;
+        float Fd = 0;
+        Vector3 Fg = new Vector3(0,-9.8f,0);
 
-        Vector3 aForce, bForce;
+        Vector3 Ftotal;
 
-        float aVel =  Vector3.Magnitude(MultiplyVectors(e,A.vel));
+        float aVel = Vector3.Magnitude(MultiplyVectors(e, A.vel));
         float bVel = Vector3.Magnitude(MultiplyVectors(e, B.vel));
 
+        //copy paste algo
+        //Fg = new vector3(0,-9.8,0)
+        //Fs = -k(distance1 - distance2)
+        //Fd = -b(velocity1 - velocity2)
+        //Ftotal = Fs + Fd + Fg
+        // print(aVel + "   " + bVel);
+        //Computes the forces
+        Fs = -SpringConstant * (RestLength - floatDistance);
+        Fd = -DampingFactor * (aVel - bVel);
 
-        sForce = -SpringConstant * (RestLength - floatDistance) - DampingFactor * (aVel - bVel);
 
-        aForce = sForce * e;
-        bForce = -1 * aForce;
+        ///Total's up the forces
+        Ftotal = Fg + (Fs * e) + (Fd * e);        
 
-        A.frc = aForce + Node.CalUniformGravity(A);
-        B.frc = bForce + Node.CalUniformGravity(B);
+        ///Gives the node's their new force
+        A.frc = Ftotal;
+        B.frc = -A.frc;
+
+
 
     }
 
@@ -98,11 +119,43 @@ public class Spring : MonoBehaviour
     }
 
 
+    static public Vector3 CalNewAcceleration(Node a)
+    {
+        return a.acl = (1f / a.mass) * a.frc;
+    }
+    static public Vector3 CalNewVelocity(Node a)
+    {
+        return a.vel += a.acl * Time.deltaTime;
+    }
+    static public Vector3 CalNewPosition(Node a)
+    {
+        if (!a.GetComponent<Node>().isAnchor)
+            return a.transform.position += CalNewVelocity(a) * Time.deltaTime;
+
+        return a.transform.position;
+    }
+    //static public Vector3 CalUniformGravity(Node a)
+    //{
+    //    return Mathf.Abs(a.mass) * new Vector3(0f, -9.8f, 0f) * (Time.deltaTime * Time.deltaTime);
+   // }
+
+
+
     static public void MakeSpring(GameObject A, GameObject B, GameObject springPrefab)
     {
-        GameObject spring = Instantiate(springPrefab);
+        GameObject spring = new GameObject("Spring: " + A.name + "->" + B.name);
+        spring.AddComponent<Spring>();
         spring.GetComponent<Spring>().goA = A;
         spring.GetComponent<Spring>().goB = B;
+    }
+    static public void MakeSpring(GameObject A, GameObject B, GameObject springPrefab, float springConst, float dampFactor)
+    {
+        GameObject spring = new GameObject("Spring: " + A.name + "->" + B.name);
+        spring.AddComponent<Spring>();
+        spring.GetComponent<Spring>().goA = A;
+        spring.GetComponent<Spring>().goB = B;
+        spring.GetComponent<Spring>().SpringConstant = springConst;
+        spring.GetComponent<Spring>().DampingFactor = dampFactor;
     }
 
 }
