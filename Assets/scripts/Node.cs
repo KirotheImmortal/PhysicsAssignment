@@ -21,7 +21,7 @@ public class Node : MonoBehaviour
     {
 
         vel = acl = frc = mom = Vector3.zero;
-        mass += .00001f;
+        mass += .0000001f;
     }
 
 

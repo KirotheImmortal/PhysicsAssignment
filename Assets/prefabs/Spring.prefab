@@ -9,6 +9,7 @@ GameObject:
   m_Component:
   - 4: {fileID: 497682}
   - 114: {fileID: 11416054}
+  - 120: {fileID: 12065108}
   m_Layer: 0
   m_Name: Spring
   m_TagString: Untagged
@@ -23,7 +24,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 165506}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 35.7012787, y: -28.4215279, z: 4.50705338}
+  m_LocalPosition: {x: 23330.6953, y: -3391.60278, z: 4.06072569}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
@@ -39,11 +40,48 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 359db8d677d5f0343893ab19d5709957, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  SpringConstant: 2
-  DampingFactor: -5
+  SpringConstant: 10
+  DampingFactor: 10
   RestLength: 0
   _goA: {fileID: 0}
   _goB: {fileID: 0}
+--- !u!120 &12065108
+LineRenderer:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 165506}
+  m_Enabled: 1
+  m_CastShadows: 1
+  m_ReceiveShadows: 1
+  m_Materials:
+  - {fileID: 10301, guid: 0000000000000000f000000000000000, type: 0}
+  m_SubsetIndices: 
+  m_StaticBatchRoot: {fileID: 0}
+  m_UseLightProbes: 1
+  m_ReflectionProbeUsage: 1
+  m_ProbeAnchor: {fileID: 0}
+  m_ScaleInLightmap: 1
+  m_PreserveUVs: 0
+  m_ImportantGI: 0
+  m_AutoUVMaxDistance: .5
+  m_AutoUVMaxAngle: 89
+  m_LightmapParameters: {fileID: 0}
+  m_SortingLayerID: 0
+  m_SortingOrder: 0
+  m_Positions:
+  - {x: 0, y: 0, z: 0}
+  - {x: 0, y: 0, z: 1}
+  m_Parameters:
+    startWidth: 1
+    endWidth: 1
+    m_StartColor:
+      serializedVersion: 2
+      rgba: 4278190335
+    m_EndColor:
+      serializedVersion: 2
+      rgba: 4278190335
+  m_UseWorldSpace: 1
 --- !u!1001 &100100000
 Prefab:
   m_ObjectHideFlags: 1
@@ -53,11 +91,23 @@ Prefab:
     m_Modifications:
     - target: {fileID: 0}
       propertyPath: SpringConstant
-      value: 2
+      value: 177.080002
       objectReference: {fileID: 0}
     - target: {fileID: 0}
       propertyPath: DampingFactor
-      value: -5
+      value: 10
+      objectReference: {fileID: 0}
+    - target: {fileID: 0}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 10301, guid: 0000000000000000f000000000000000, type: 0}
+    - target: {fileID: 0}
+      propertyPath: m_Parameters.m_StartColor.rgba
+      value: 4278190335
+      objectReference: {fileID: 0}
+    - target: {fileID: 0}
+      propertyPath: m_Parameters.m_EndColor.rgba
+      value: 4278190335
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 0}

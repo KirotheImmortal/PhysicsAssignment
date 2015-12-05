@@ -5,7 +5,7 @@ public class Spring : MonoBehaviour
 {
     public float SpringConstant = 10; //k.s
     public float DampingFactor = 10;  //k.d
-    public float RestLength = 0;
+    public float RestLength = 1;
     [SerializeField]
     GameObject _goA;
     [SerializeField]
@@ -39,22 +39,25 @@ public class Spring : MonoBehaviour
             B = goB.GetComponent<Node>();
             RestLength = Vector3.Magnitude(goA.transform.position - goB.transform.position);
         }
-       
 
+        if (!GetComponent<LineRenderer>())
+            gameObject.AddComponent<LineRenderer>();
+        
+        GetComponent<LineRenderer>().SetColors(Color.red, Color.red);
+        GetComponent<LineRenderer>().SetWidth(.1f, .1f);
     }
 
     void Update()
     {
         if (goA != null && goA != null && A == null && B == null)
         {
+            RestLength = Vector3.Magnitude(goA.transform.position - goB.transform.position);
             A = goA.GetComponent<Node>();
             B = goB.GetComponent<Node>();
         }
 
-        if( RestLength== 0)
-            RestLength = Vector3.Magnitude(goA.transform.position - goB.transform.position);
-
-        Debug.DrawLine(goA.transform.position, goB.transform.position);
+       
+       // Debug.DrawLine(goA.transform.position, goB.transform.position);
 
         Vector3 middle;
         
@@ -63,92 +66,79 @@ public class Spring : MonoBehaviour
         middle.z = (goA.transform.position.z + goB.transform.position.z)/2;
 
         gameObject.transform.position = middle;
+       
+        GetComponent<LineRenderer>().SetPosition(0, goA.transform.position);
+        GetComponent<LineRenderer>().SetPosition(1, goB.transform.position);
 
         CalForce();
 
 
 
-        CalNewAcceleration(A);
-        CalNewAcceleration(B);
-
-        CalNewPosition(A);
-        CalNewPosition(B);
+        MoveNode(A);
+        MoveNode(B);
+           
     }
+
+    Vector3 Ftotal = Vector3.zero;
     
     public void CalForce()
     {
-        //Computes the reletive distance from the two nodes
+        //computes the unity length vector e from goA to goB
+        //then computes the distance
         Vector3 vectorDistance = goB.transform.position - goA.transform.position;
-        //gets a 1D Distance of the two nodes
-        float floatDistance = Vector3.Magnitude(vectorDistance);
-        Vector3 e = vectorDistance / floatDistance;
+        float abMag = Vector3.Magnitude(vectorDistance);
+        Vector3 e = vectorDistance / abMag;
+
         float Fs = 0;
         float Fd = 0;
-        Vector3 Fg = new Vector3(0,-9.8f,0);
+        Vector3 Fg = new Vector3(0,-1.8f,0);
 
-        Vector3 Ftotal;
+       
+        //gets the 1d velocity
+        float aVel = Vector3.Dot(e, A.vel);
+        float bVel = Vector3.Dot(e, B.vel);
 
-        float aVel = Vector3.Magnitude(MultiplyVectors(e, A.vel));
-        float bVel = Vector3.Magnitude(MultiplyVectors(e, B.vel));
 
-        //copy paste algo
-        //Fg = new vector3(0,-9.8,0)
-        //Fs = -k(distance1 - distance2)
-        //Fd = -b(velocity1 - velocity2)
-        //Ftotal = Fs + Fd + Fg
-        // print(aVel + "   " + bVel);
-        //Computes the forces
-        Fs = -SpringConstant * (RestLength - floatDistance);
+        ///Computes the forces
+        Fs = -SpringConstant * (RestLength-abMag /*- RestLength*/);
         Fd = -DampingFactor * (aVel - bVel);
 
 
         ///Total's up the forces
-        Ftotal = Fg + (Fs * e) + (Fd * e);        
+        Ftotal = (Fs * e) + (Fd * e);
+        // Ftotal = 
 
         ///Gives the node's their new force
-        A.frc = Ftotal;
-        B.frc = -A.frc;
+        A.frc =  Ftotal+Fg;
+        B.frc = -Ftotal+Fg;
 
 
 
     }
 
-    Vector3 MultiplyVectors(Vector3 a , Vector3 b)
-    {
-        return new Vector3((a.x * b.x), (a.y * b.y), (a.z * b.z));
-    }
 
-
-    static public Vector3 CalNewAcceleration(Node a)
-    {
-        return a.acl = (1f / a.mass) * a.frc;
-    }
-    static public Vector3 CalNewVelocity(Node a)
-    {
-        return a.vel += a.acl * Time.deltaTime;
-    }
-    static public Vector3 CalNewPosition(Node a)
+    static public void MoveNode(Node a)
     {
         if (!a.GetComponent<Node>().isAnchor)
-            return a.transform.position += CalNewVelocity(a) * Time.deltaTime;
+        {
+            a.acl = a.frc / a.mass;
+            a.vel += a.frc * Time.fixedDeltaTime;
+            a.transform.position += a.vel * Time.fixedDeltaTime;
 
-        return a.transform.position;
+         }
     }
-    //static public Vector3 CalUniformGravity(Node a)
-    //{
-    //    return Mathf.Abs(a.mass) * new Vector3(0f, -9.8f, 0f) * (Time.deltaTime * Time.deltaTime);
-   // }
 
 
 
-    static public void MakeSpring(GameObject A, GameObject B, GameObject springPrefab)
+    static public GameObject MakeSpring(GameObject A, GameObject B, GameObject springPrefab)
     {
         GameObject spring = new GameObject("Spring: " + A.name + "->" + B.name);
         spring.AddComponent<Spring>();
         spring.GetComponent<Spring>().goA = A;
         spring.GetComponent<Spring>().goB = B;
+        return spring;
     }
-    static public void MakeSpring(GameObject A, GameObject B, GameObject springPrefab, float springConst, float dampFactor)
+    static public GameObject MakeSpring(GameObject A, GameObject B, GameObject springPrefab, float springConst, float dampFactor)
     {
         GameObject spring = new GameObject("Spring: " + A.name + "->" + B.name);
         spring.AddComponent<Spring>();
@@ -156,6 +146,7 @@ public class Spring : MonoBehaviour
         spring.GetComponent<Spring>().goB = B;
         spring.GetComponent<Spring>().SpringConstant = springConst;
         spring.GetComponent<Spring>().DampingFactor = dampFactor;
+        return spring;
     }
 
 }
