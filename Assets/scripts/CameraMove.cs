@@ -23,7 +23,7 @@ public class CameraMove : MonoBehaviour
 		float Rx = 0;	// Rotation around the X-axis
 		float Ry = 0;	// Rotation around the Y-axis
 
-		if(Input.GetMouseButton(0))	// Checks if the left mouse button is being clicked
+		if(Input.GetMouseButton(2))	// Checks if the left mouse button is being clicked
 		{
 			Th = speed * Input.GetAxis("Mouse X") * Time.deltaTime;	// Sets Th to the difference the horizontal movement of the mouse
 			Tv = speed * Input.GetAxis("Mouse Y") * Time.deltaTime;	// Sets Tv to the difference the verticle movement of the mouse
@@ -31,8 +31,8 @@ public class CameraMove : MonoBehaviour
 
 		if(Input.GetMouseButton(1))	// Checks if the right mouse button is being clicked
 		{
-			Rx = speed * 0.1f * Input.GetAxis("Mouse Y") * Time.deltaTime;	// Sets Rx to the difference the verticle movement of the mouse
-			Ry = speed * 0.1f * Input.GetAxis("Mouse X") * Time.deltaTime;	// Sets Ry to the difference the horizontal movement of the mouse
+			Rx = speed * 0.25f * Input.GetAxis("Mouse Y") * Time.deltaTime;	// Sets Rx to the difference the verticle movement of the mouse
+			Ry = speed * 0.25f * Input.GetAxis("Mouse X") * Time.deltaTime;	// Sets Ry to the difference the horizontal movement of the mouse
 		}
 
 		if(Input.GetAxis("Mouse ScrollWheel") > 0)	// Checks if the mouse wheele is being rolled forward

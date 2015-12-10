@@ -11,6 +11,8 @@ public class Node : MonoBehaviour
    public Vector3 mom; //Momentum
    public Vector3 frc; // Force
 
+   public Vector3 airfrc;
+
    public  float mass =1;
 
    public bool isAnchor = false;
@@ -23,6 +25,12 @@ public class Node : MonoBehaviour
         vel = acl = frc = mom = Vector3.zero;
         mass += .0000001f;
     }
+    void Update()
+    {   
+        //if(Vector3.Magnitude(frc)!= 0)
+        //Spring.MoveNode(this);
+    }
+
 
 
 
