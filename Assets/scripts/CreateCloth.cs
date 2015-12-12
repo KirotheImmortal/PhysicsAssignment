@@ -36,7 +36,7 @@ public class CreateCloth : MonoBehaviour
 
     // List<Spring> springs = new List<Spring>();
     //List<Node> nodes = new List<Node>();
-    Dictionary<Vector2, GameObject> objectNodes = new Dictionary<Vector2, GameObject>();
+    public Dictionary<Vector2, GameObject> objectNodes = new Dictionary<Vector2, GameObject>();
     public List<GameObject> springs = new List<GameObject>();
 
     void Awake()
@@ -222,6 +222,7 @@ public class CreateCloth : MonoBehaviour
                 {
                     springs.Add(Spring.MakeSpring(objectNodes[new Vector2(row, colom)], objectNodes[new Vector2(row - 1, colom + 1)], springPref));
                 }
+              
 
                 //     Spring.MakeSpring(objectNodes[new Vector2(row, colom)], objectNodes[new Vector2(0, amount-1)], springPref);
 

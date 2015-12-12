@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
+using System.Collections.Generic;
 
 public class Spring : MonoBehaviour
 {
@@ -7,6 +8,9 @@ public class Spring : MonoBehaviour
     public float DampingFactor = 10;  //k.d
     public float RestLength;
     public float breakLength = 100000;
+    public Material mat;
+    
+
     [SerializeField]
     GameObject _goA;
     [SerializeField]
@@ -38,17 +42,31 @@ public class Spring : MonoBehaviour
         {
             A = goA.GetComponent<Node>();
             B = goB.GetComponent<Node>();
-            RestLength = Vector3.Magnitude(goA.transform.position - goB.transform.position);
+            RestLength = Vector3.Magnitude(goB.transform.position - goA.transform.position);
+            List<GameObject> ls = A.list;
+            ls.Add(gameObject);
+            A.list = ls;
+            ls = B.list;
+            ls.Add(gameObject);
+            B.list = ls;
         }
   
         if (!GetComponent<LineRenderer>())
             gameObject.AddComponent<LineRenderer>();
+        GetComponent<LineRenderer>().materials[0] = mat;
+        GetComponent<LineRenderer>().SetColors(Color.black, Color.black);
+        GetComponent<LineRenderer>().SetWidth(.15f, .15f);
 
-        Material a = FindObjectOfType<LineRenderer>().material;
 
-        GetComponent<LineRenderer>().material = a;
-        GetComponent<LineRenderer>().SetColors(Color.red, Color.red);
-        GetComponent<LineRenderer>().SetWidth(.1f, .1f);
+    }
+    void Start()
+    {
+        List<GameObject> ls = A.list;
+        ls.Add(gameObject);
+        A.list = ls;
+        ls = B.list;
+        ls.Add(gameObject);
+        B.list = ls;
     }
 
     void Update()
@@ -59,6 +77,8 @@ public class Spring : MonoBehaviour
         //    A = goA.GetComponent<Node>();
         //    B = goB.GetComponent<Node>();
         //}
+        if(RestLength == 0)
+            RestLength = Vector3.Magnitude(goB.transform.position - goA.transform.position);
         if (goA != null && goB != null)
         {
 
@@ -97,8 +117,8 @@ public class Spring : MonoBehaviour
             //computes the unity length vector e from goA to goB
             //then computes the distance
             Vector3 vectorDistance = goB.transform.position - goA.transform.position;
-          
-            
+
+       //     print(RestLength);
             float abMag = Vector3.Magnitude(vectorDistance);
             if (abMag < breakLength)
             {
@@ -127,8 +147,8 @@ public class Spring : MonoBehaviour
                 //print("something20");
 
                 ///Gives the node's their new force
-                A.frc = Ftotal + Fg + A.airfrc;
-                B.frc = -Ftotal + Fg + A.airfrc;
+                A.frc += Ftotal + Fg + A.airfrc + A.mouseFrc;
+                B.frc += -Ftotal + Fg + A.airfrc + A.mouseFrc;
 
             }
             else Destroy(gameObject);
@@ -148,11 +168,12 @@ public class Spring : MonoBehaviour
             a.acl = a.frc / a.mass;
             a.vel += a.frc * Time.fixedDeltaTime;
            newPos = a.vel * Time.fixedDeltaTime;
-            if(newPos.x + a.transform.position.x > 1000 ||newPos.y + a.transform.position.y > 1000 || newPos.z + a.transform.position.z > 1000)
+            if(newPos.x + a.transform.position.x > 1000 ||newPos.y + a.transform.position.y > 1000 || newPos.z + a.transform.position.z > 1000 ||
+                newPos.x + a.transform.position.x < -1000 || newPos.y + a.transform.position.y < -1000 || newPos.z + a.transform.position.z < -1000)
             { Destroy(a.gameObject); }
             else 
             a.transform.position += newPos;
-           // a.frc = Vector3.zero;
+            a.frc = Vector3.zero;
          }
     }
 
@@ -175,6 +196,17 @@ public class Spring : MonoBehaviour
         spring.GetComponent<Spring>().SpringConstant = springConst;
         spring.GetComponent<Spring>().DampingFactor = dampFactor;
         return spring;
+    }
+
+    void OnDestroy()
+    {
+        List<GameObject> ls = A.list;
+        ls.Remove(gameObject);
+        A.list = ls;
+        ls = B.list;
+        ls.Remove(gameObject);
+        B.list = ls;
+
     }
 
 }

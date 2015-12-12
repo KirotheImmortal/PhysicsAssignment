@@ -9,7 +9,6 @@ GameObject:
   m_Component:
   - 4: {fileID: 497682}
   - 114: {fileID: 11416054}
-  - 120: {fileID: 12065108}
   m_Layer: 0
   m_Name: Spring
   m_TagString: Untagged
@@ -43,45 +42,10 @@ MonoBehaviour:
   SpringConstant: 10
   DampingFactor: 10
   RestLength: 0
+  breakLength: 100000
+  mat: {fileID: 2100000, guid: ade3fff301de5b147b4d0d13a028fa4e, type: 2}
   _goA: {fileID: 0}
   _goB: {fileID: 0}
---- !u!120 &12065108
-LineRenderer:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 165506}
-  m_Enabled: 1
-  m_CastShadows: 1
-  m_ReceiveShadows: 1
-  m_Materials:
-  - {fileID: 10301, guid: 0000000000000000f000000000000000, type: 0}
-  m_SubsetIndices: 
-  m_StaticBatchRoot: {fileID: 0}
-  m_UseLightProbes: 1
-  m_ReflectionProbeUsage: 1
-  m_ProbeAnchor: {fileID: 0}
-  m_ScaleInLightmap: 1
-  m_PreserveUVs: 0
-  m_ImportantGI: 0
-  m_AutoUVMaxDistance: .5
-  m_AutoUVMaxAngle: 89
-  m_LightmapParameters: {fileID: 0}
-  m_SortingLayerID: 0
-  m_SortingOrder: 0
-  m_Positions:
-  - {x: 0, y: 0, z: 0}
-  - {x: 0, y: 0, z: 1}
-  m_Parameters:
-    startWidth: 1
-    endWidth: 1
-    m_StartColor:
-      serializedVersion: 2
-      rgba: 4278190335
-    m_EndColor:
-      serializedVersion: 2
-      rgba: 4278190335
-  m_UseWorldSpace: 1
 --- !u!1001 &100100000
 Prefab:
   m_ObjectHideFlags: 1
@@ -108,6 +72,18 @@ Prefab:
     - target: {fileID: 0}
       propertyPath: m_Parameters.m_EndColor.rgba
       value: 4278190335
+      objectReference: {fileID: 0}
+    - target: {fileID: 0}
+      propertyPath: mat
+      value: 
+      objectReference: {fileID: 2100000, guid: ade3fff301de5b147b4d0d13a028fa4e, type: 2}
+    - target: {fileID: 0}
+      propertyPath: m_Parameters.startWidth
+      value: .100000001
+      objectReference: {fileID: 0}
+    - target: {fileID: 0}
+      propertyPath: m_Parameters.endWidth
+      value: .100000001
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 0}
