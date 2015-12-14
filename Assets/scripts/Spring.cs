@@ -164,9 +164,23 @@ public class Spring : MonoBehaviour
     {
         if (!a.GetComponent<Node>().isAnchor)
         {
+            GameObject plane = GameObject.FindGameObjectWithTag("Plane");
             Vector3 newPos;
             a.acl = a.frc / a.mass;
             a.vel += a.frc * Time.fixedDeltaTime;
+            newPos = a.vel * Time.fixedDeltaTime;
+            newPos += a.transform.position;
+            if(newPos.y < plane.transform.position.y)
+            {
+                if (newPos.y < (plane.transform.position.z + plane.transform.lossyScale.z) && plane.transform.position.z - plane.transform.lossyScale.z < newPos.z)
+                {
+                    a.vel.y = 0;
+                }
+                if ((plane.transform.position.x + plane.transform.lossyScale.x) > newPos.x && plane.transform.position.x - plane.transform.lossyScale.x < newPos.x)
+                {
+                    a.vel.y = 0;
+                }
+            }
            newPos = a.vel * Time.fixedDeltaTime;
             if(newPos.x + a.transform.position.x > 1000 ||newPos.y + a.transform.position.y > 1000 || newPos.z + a.transform.position.z > 1000 ||
                 newPos.x + a.transform.position.x < -1000 || newPos.y + a.transform.position.y < -1000 || newPos.z + a.transform.position.z < -1000)

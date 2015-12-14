@@ -6,10 +6,8 @@ public class MouseInteraction : MonoBehaviour
     CreateCloth cc;
     Camera c;
     GameObject go;
-    public
-
-    GameObject SelectedNode;
-
+    public GameObject SelectedNode;
+    public float speed;
     void Awake()
     {
         cc = FindObjectOfType<CreateCloth>();
@@ -22,7 +20,7 @@ public class MouseInteraction : MonoBehaviour
 
 
 
-        go = new GameObject(); ///  Creates empty gameobject to be used as cursor in World space
+        go = new GameObject("Mouse Location"); ///  Creates empty gameobject to be used as cursor in World space
     }
 
 
@@ -36,7 +34,7 @@ public class MouseInteraction : MonoBehaviour
 
         if (Input.GetAxis("Mouse ScrollWheel") < 0)
         {// Checks if the mouse wheele is being rolled backward
-           // transform.position -= transform.forward * 20 * Time.deltaTime;  // Moves the camera back
+            // transform.position -= transform.forward * 20 * Time.deltaTime;  // Moves the camera back
             c.orthographicSize++;
         }
 
@@ -45,20 +43,30 @@ public class MouseInteraction : MonoBehaviour
 
             CheckForObject(ref cc.objectNodes); // Calls CheckForObject
         }
-        if(Input.GetMouseButton(0))
+        if (Input.GetMouseButton(0))
         {
             MoveObject();
-           
+
         }
-        else
+        else if(!Input.GetKey(KeyCode.Space))
         {
+            if (SelectedNode != null)
+            {
+                SelectedNode.GetComponent<Node>().isAnchor = false;
+                
+            }
+            SelectedNode = null;
+        }
+        else if(Input.GetKey(KeyCode.Space))
+        {
+
             SelectedNode = null;
         }
 
         if (Input.GetMouseButton(1)) // Checks to see if right mouse button is clicked
         {
             //print(Input.mousePosition);
-            CutObjects(ref cc.objectNodes,ref cc.springs);// calls check for object
+            CutObjects(ref cc.objectNodes, ref cc.springs);// calls check for object
 
         }
 
@@ -70,7 +78,7 @@ public class MouseInteraction : MonoBehaviour
 
     void CutObjects(ref Dictionary<Vector2, GameObject> nodes, ref List<GameObject> springs)
     {
-       
+
         foreach (KeyValuePair<Vector2, GameObject> n in nodes)
         {
             if (n.Value != null)
@@ -80,10 +88,10 @@ public class MouseInteraction : MonoBehaviour
 
 
                 //Checks to see if the X and the Y of the worldspace cursor and the n gameobject is the same
-              if (go.transform.position.x < n.Value.transform.position.x + .5f
-                    && go.transform.position.y < n.Value.transform.position.y + .5f 
-                    && go.transform.position.x > n.Value.transform.position.x - .5f 
-                    && go.transform.position.y > n.Value.transform.position.y - .5f)
+                if (     go.transform.position.x < n.Value.transform.position.x + .5f
+                      && go.transform.position.y < n.Value.transform.position.y + .5f
+                      && go.transform.position.x > n.Value.transform.position.x - .5f
+                      && go.transform.position.y > n.Value.transform.position.y - .5f)
                 {   //Checks to see wich mouse was pressed by the button int passed in
                     Destroy(n.Value); //Destroys the n gameobject
                 }
@@ -118,12 +126,12 @@ public class MouseInteraction : MonoBehaviour
                 go.transform.position = c.ScreenToWorldPoint(new Vector3(Input.mousePosition.x, Input.mousePosition.y, dis));
 
                 //Checks to see if the X and the Y of the worldspace cursor and the n gameobject is the same
-                if (    go.transform.position.x < n.Value.transform.position.x + .5f 
-                    &&  go.transform.position.y < n.Value.transform.position.y + .5f 
-                    &&  go.transform.position.x > n.Value.transform.position.x - .5f 
-                    &&  go.transform.position.y > n.Value.transform.position.y - .5f)
+                if (go.transform.position.x < n.Value.transform.position.x + .5f
+                    && go.transform.position.y < n.Value.transform.position.y + .5f
+                    && go.transform.position.x > n.Value.transform.position.x - .5f
+                    && go.transform.position.y > n.Value.transform.position.y - .5f)
                 {   //Checks to see wich mouse was pressed by the button int passed in
-                        SelectedNode = n.Value; // Sets the node to SelectedNode
+                    SelectedNode = n.Value; // Sets the node to SelectedNode
 
                 }
                 //else
@@ -131,17 +139,35 @@ public class MouseInteraction : MonoBehaviour
             }
         }
 
-      
+
 
     }
     void MoveObject()
     {
-        if(SelectedNode != null)
+        if (SelectedNode != null)
         {
             float dis = c.WorldToScreenPoint(SelectedNode.transform.position).z;
             go.transform.position = c.ScreenToWorldPoint(new Vector3(Input.mousePosition.x, Input.mousePosition.y, dis));
-        //    SelectedNode.GetComponent<Node>().mouseFrc =  ;
-        }
-    }
+            Vector3 vectorDistance = SelectedNode.transform.position - go.transform.position;
 
+            //     print(RestLength);
+            float abMag = Vector3.Magnitude(vectorDistance);
+
+
+            Vector3 e = vectorDistance / abMag;
+
+            SelectedNode.GetComponent<Node>().isAnchor = true;
+
+            SelectedNode.GetComponent<Node>().frc = Vector3.zero;
+            SelectedNode.GetComponent<Node>().vel = Vector3.zero;
+            SelectedNode.GetComponent<Node>().acl = Vector3.zero;
+
+
+            SelectedNode.transform.position=  Vector3.MoveTowards(SelectedNode.transform.position, go.transform.position, Time.deltaTime * speed);
+
+            //    SelectedNode.GetComponent<Node>().mouseFrc =  ;
+
+        }
+
+    }
 }
