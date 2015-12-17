@@ -63,7 +63,7 @@ public class MouseInteraction : MonoBehaviour
             SelectedNode = null;
         }
 
-        if (Input.GetMouseButton(1)) // Checks to see if right mouse button is clicked
+        if (Input.GetMouseButton(0) && Input.GetKey(KeyCode.LeftShift)) // Checks to see if right mouse button is clicked
         {
             //print(Input.mousePosition);
             CutObjects(ref cc.objectNodes, ref cc.springs);// calls check for object
