@@ -23,7 +23,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 165506}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 23330.6953, y: -3391.60278, z: 4.06072569}
+  m_LocalPosition: {x: 23330.695, y: -3391.6028, z: 4.0607257}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
@@ -43,7 +43,7 @@ MonoBehaviour:
   DampingFactor: 10
   RestLength: 0
   breakLength: 100000
-  mat: {fileID: 2100000, guid: ade3fff301de5b147b4d0d13a028fa4e, type: 2}
+  mat: {fileID: 2100000, guid: cf35cf49952df9e4599d2b54be27b824, type: 2}
   _goA: {fileID: 0}
   _goB: {fileID: 0}
 --- !u!1001 &100100000
@@ -76,7 +76,7 @@ Prefab:
     - target: {fileID: 0}
       propertyPath: mat
       value: 
-      objectReference: {fileID: 2100000, guid: ade3fff301de5b147b4d0d13a028fa4e, type: 2}
+      objectReference: {fileID: 2100000, guid: cf35cf49952df9e4599d2b54be27b824, type: 2}
     - target: {fileID: 0}
       propertyPath: m_Parameters.startWidth
       value: .100000001

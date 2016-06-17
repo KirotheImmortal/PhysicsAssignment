@@ -8,7 +8,7 @@ public class Spring : MonoBehaviour
     public float DampingFactor = 10;  //k.d
     public float RestLength;
     public float breakLength = 100000;
-    public Material mat;
+    [SerializeField] public Material mat;
     
 
     [SerializeField]
@@ -38,6 +38,7 @@ public class Spring : MonoBehaviour
 
     void OnEnable()
     {
+        
         if (goA != null && goB != null && A == null && B == null)
         {
             A = goA.GetComponent<Node>();
@@ -53,10 +54,16 @@ public class Spring : MonoBehaviour
   
         if (!GetComponent<LineRenderer>())
             gameObject.AddComponent<LineRenderer>();
-        GetComponent<LineRenderer>().materials[0] = mat;
+        if(mat == null)
+        {
+          
+            mat = (Material)Resources.Load("Black");
+            //mat.color = Color.black;
+        }
+        
         GetComponent<LineRenderer>().SetColors(Color.black, Color.black);
         GetComponent<LineRenderer>().SetWidth(.15f, .15f);
-
+        GetComponent<LineRenderer>().material = mat;
 
     }
     void Start()
